@@ -1,0 +1,31 @@
+[package]
+name = "simod-ui"
+version = "0.1.0"
+edition = "2021"
+description = "Simod - Hệ thống quản lý cửa hàng tạp hóa (giao diện Leptos)"
+
+[workspace]
+members = ["shared", "src-tauri"]
+resolver = "2"
+
+[dependencies]
+simod-shared = { path = "shared" }
+leptos = { version = "0.8", features = ["csr"] }
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = ["Window", "Document", "HtmlInputElement", "HtmlElement"] }
+console_error_panic_hook = "0.1"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+
+# Argon2 rất chậm ở chế độ debug -> luôn tối ưu cho các gói băm mật khẩu
+[profile.dev.package.argon2]
+opt-level = 3
+[profile.dev.package.blake2]
+opt-level = 3

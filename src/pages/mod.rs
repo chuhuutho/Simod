@@ -1,0 +1,12 @@
+pub mod auth;
+pub mod home;
+pub mod invoices;
+pub mod login;
+pub mod products;
+pub mod purchases;
+pub mod revenue;
+pub mod sales;
+pub mod stock;
+pub mod stocktake;
+pub mod suppliers;
+pub mod users;
