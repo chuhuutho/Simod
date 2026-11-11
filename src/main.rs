@@ -29,7 +29,7 @@ fn App() -> impl IntoView {
         cart: RwSignal::new(Vec::new()),
         user: RwSignal::new(None),
         page: RwSignal::new(Page::Home),
-        toast: RwSignal::new(None),
+        toast: RwSignal::new(Vec::new()),
     };
     provide_context(c);
     // Khôi phục phiên (nếu cửa sổ được tải lại)
@@ -48,9 +48,29 @@ fn App() -> impl IntoView {
 fn Toaster() -> impl IntoView {
     let c = ctx::ctx();
     view! {
-        {move || c.toast.get().map(|t| view! {
-            <div class="toast" class:ok=t.ok class:err=!t.ok>{t.text}</div>
-        })}
+        <div class="toast-stack">
+            <For
+                each=move || c.toast.get()
+                key=|t| t.id
+                children=move |t: ctx::Toast| {
+                    let kind = t.kind;
+                    let id = t.id;
+                    view! {
+                        <div class=format!("toast {}", kind.class()) role=kind.role() data-id=id.to_string()>
+                            <div class="toast-chip"><Icon name=kind.icon() size=18/></div>
+                            <div class="toast-body">
+                                <div class="toast-title">{kind.title()}</div>
+                                <div class="toast-msg">{t.text}</div>
+                            </div>
+                            <button class="toast-x" aria-label="Đóng thông báo" on:click=move |_| c.dismiss(id)>
+                                <Icon name="x" size=16/>
+                            </button>
+                            <div class="toast-bar" style=format!("animation-duration: {}ms", kind.millis())></div>
+                        </div>
+                    }
+                }
+            />
+        </div>
     }
 }
 
